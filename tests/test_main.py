@@ -3,6 +3,10 @@ import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import main
 
+# Вывод отладочной информации
+print("Текущая рабочая директория:", os.getcwd())
+print("sys.path:", sys.path)
+
 def test_greet():
     result = main.greet("Мир")
     expected = "Привет, Мир!"
