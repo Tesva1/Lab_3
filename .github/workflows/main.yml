@@ -1,0 +1,46 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, development, release]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; else echo "No requirements.txt found"; fi
+
+      - name: Run tests
+        run: |
+          if command -v pytest >/dev/null 2>&1; then pytest; else echo "Pytest не установлен"; fi
+
+  build-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python for docs
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'
+
+      - name: Install Sphinx
+        run: pip install sphinx
+
+      - name: Build Documentation
+        working-directory: docs
+        run: |
+          make html || sphinx-build -b html . _build/html
